@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link rel="apple-touch-icon" href="app/img/icon-76.png"/>
+	<link rel="apple-touch-icon" sizes="76x76" href="app/img/icon-120.png"/>
+	<link rel="apple-touch-icon" sizes="120x120" href="app/img/icon-120.png"/>
+	<link rel="apple-touch-icon" sizes="152x152" href="app/img/icon-152.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+	<!-- iPhone 2G, 3G, 3GS -->
+	<link rel="apple-touch-startup-image"
+		  media="(device-width: 320px) and (device-height: 480px)"
+		  href="app/img/startup-320x460.png" sizes="320x460">
+	<!-- iPhone 4, 4S -->
+	<link rel="apple-touch-startup-image"
+		  media="(-webkit-device-pixel-ratio: 2) and (device-width: 320px) and (device-height: 480px)"
+		  href="app/img/startup-640x920.png" sizes="640x920">
+	<!-- iPhone 5 -->
+	<link rel="apple-touch-startup-image"
+		  media="(-webkit-device-pixel-ratio: 2) and (device-width: 320px) and (device-height: 568px)"
+		  href="app/img/startup-640x1096.png" sizes="640x1096">
+
+	<title>Notes</title>
+	<!-- styles -->
+	<link href="app/css/styles.css" rel="stylesheet">
+</head>
+
+<body style="">
+
+<div class="container">
+	<div class="content">
+		<div class="chat">
+			<h1>Chat</h1>
+			<div id="content" class="content"></div>
+			<div class="row">
+				<div class="col-lg-6">
+					<form class="form-horizontal" id="chatform" role="form">
+						<div class="input-group">
+							<span class="input-group-addon chatLabel">Connecting..</span>
+							<input id="input" disabled="disabled" type="text" class="form-control">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="submit">Send</button>
+							</span>
+						</div><!-- /input-group -->
+					</form>
+				</div><!-- /.col-lg-6 -->
+			</div><!-- /.row -->
+		</div>
+		<div class="info">
+			<h1>Info</h1>
+			<div class="well">
+				<h4>Project</h4>
+				<p>
+					This is a simple webapp which works completely offline. The notes get stored in the browser's
+					"local storage".<br/>
+					<a href="https://github.com/mwitte/Notes-Webapp">Github Project</a>
+				</p>
+				<h4>Author</h4>
+				<p>
+					<a href="http://www.matthias-witte.net">Matthias Witte</a>
+				</p>
+			</div>
+		</div>
+		<div class="debug">
+			<h1>Debug</h1>
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label for="log" class="col-lg-2 control-label">Log</label>
+					<div class="col-lg-10">
+						<textarea class="form-control" id="log" rows="8"></textarea>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- /.content -->
+</div>
+<!-- /.container -->
+<div class="footer">
+	<a href="#" data-content="info" class="navigation btn btn-default">Info</a>
+</div>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="app/js/app.js"></script>
+<script src="//localhost:35729/livereload.js"></script>
+</body>
+</html>
