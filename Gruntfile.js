@@ -19,6 +19,8 @@ module.exports = function(grunt) {
 			},
 			server: {
 				src: [
+					sourceDir + 'server/WebSocketServer.js',
+					sourceDir + 'server/SimpleChatServer.js',
 					sourceDir + 'server/**/*.js'
 				],
 				dest: buildDirServerApp + 'server/app.js'

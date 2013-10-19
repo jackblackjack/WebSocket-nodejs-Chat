@@ -2,62 +2,90 @@ var SimpleChatServer = {
 	webSocket: null,
 	chronicle: [],
 
-	message: function(message){
-		if (userName === false) { // first message sent by user is their name
-			// remember user name
-			userName = htmlEntities(message.utf8Data);
-			this.webSocket.connection.sendUTF(JSON.stringify({ type:'settings', body: {}}));
-			console.log((new Date()) + ' User is known as: ' + userName);
+	/**
+	 * Process a received message
+	 *
+	 * @param message
+	 * @param client
+	 */
+	message: function(message, client){
 
-		} else { // log and broadcast the message
-			console.log((new Date()) + ' Received Message from '
-				+ userName + ': ' + message.utf8Data);
-
-			// we want to keep chronicle of all sent messages
-			var obj = {
+		// if nickname isn't set its the first message
+		if (typeof client.settings.nickname === 'undefined') {
+			// add nickname to client settings
+			client.settings.nickname = SimpleChatServer.uniqueNickname(U.htmlEntities(message.utf8Data));
+			WebSocketServer.send(client, { type:'settings', body: {}});
+			var infoObject = {
 				created: (new Date()).getTime(),
-				author: userName,
-				content: htmlEntities(message.utf8Data)
+				type: 'userJoined',
+				content: client.settings.nickname
 			};
-			chronicle.push(obj);
-			chronicle = chronicle.slice(-100);
+			WebSocketServer.broadcast({type: 'info', body: infoObject});
+			console.log((new Date()) + ' User is known as: ' + client.settings.nickname);
+		} else {
+			console.log((new Date()) + ' Received Message from '
+				+ client.settings.nickname + ': ' + message.utf8Data);
+			// we want to keep chronicle of all sent messages
+			var messageObject = {
+				created: (new Date()).getTime(),
+				author: client.settings.nickname,
+				content: U.htmlEntities(message.utf8Data)
+			};
 
+			SimpleChatServer.chronicle.push(messageObject);
+			SimpleChatServer.chronicle = SimpleChatServer.chronicle.slice(-50);
 			// broadcast message to all connected clients
-			var json = JSON.stringify({ type:'message', body: obj });
-			for (var i=0; i < this.webSocket.clients.length; i++) {
-				this.webSocket.clients[i].sendUTF(json);
-			}
+			WebSocketServer.broadcast({ type: 'message', body: messageObject });
 		}
 	},
 
-	request: function(){
+	/**
+	 * Gets called on first connection to the client
+	 *
+	 * @param client
+	 */
+	request: function(client){
 		// send back chat chronicle
-		if (this.chronicle.length > 0) {
-			this.webSocket.connection.sendUTF(JSON.stringify( { type: 'chronicle', body: this.chronicle} ));
+		if (Object.keys(SimpleChatServer.chronicle).length > 0) {
+			WebSocketServer.send(client, { type: 'chronicle', body: SimpleChatServer.chronicle});
 		}
 
 	},
 
-	close: function(){
-
+	/**
+	 * Gets called when the client disconnects
+	 */
+	close: function(client){
+		if(typeof client.settings.nickname !== 'undefined'){
+			var infoObject = {
+				created: (new Date()).getTime(),
+				type: 'userLeft',
+				content: U.htmlEntities(client.settings.nickname)
+			};
+			WebSocketServer.broadcast({type: 'info', body: infoObject});
+		}
 	},
 
-	init: function(){
-
-		var http = require('http');
-		var webSocketsServerPort = 61843;
-
-		/**
-		 * HTTP server
-		 */
-		var httpServer = http.createServer(function(request, response) {
-			// useless so far, we it only for the webSocket
+	/**
+	 * Find a unique nickname
+	 *
+	 * @param nickname
+	 * @param increment optional
+	 * @returns string
+	 */
+	uniqueNickname: function(nickname, increment) {
+		if (typeof increment === 'undefined') {
+			increment = 0;
+		}
+		var newNick = nickname;
+		Object.keys(WebSocketServer.clients).forEach(function(index) {
+			var otherNickname = WebSocketServer.clients[index].settings.nickname;
+			if(typeof otherNickname !== 'undefined' && nickname === otherNickname){
+				console.log('ja');
+				increment++;
+				newNick =  SimpleChatServer.uniqueNickname(nickname +''+ increment, increment);
+			}
 		});
-		httpServer.listen(webSocketsServerPort, function() {
-			console.log((new Date()) + " Server is listening on port " + webSocketsServerPort);
-		});
-
-
-		this.webSocket = new WebSocketServer(httpServer, SimpleChatServer.request, SimpleChatServer.message, SimpleChatServer.close);
+		return newNick;
 	}
 }

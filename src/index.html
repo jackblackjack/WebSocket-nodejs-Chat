@@ -34,18 +34,18 @@
 <body style="">
 
 <div class="container">
+	<a href="#" data-content="chat" class="navigation"><h1>HipsterChat</h1></a>
 	<div class="content">
-		<div class="chat">
-			<h1>Chat</h1>
+		<div class="chat" id="chat">
 			<div id="content" class="content"></div>
-			<div class="row">
-				<div class="col-lg-6">
+			<div class="">
+				<div class="">
 					<form class="form-horizontal" id="chatform" role="form">
 						<div class="input-group">
 							<span class="input-group-addon chatLabel">Connecting..</span>
-							<input id="input" disabled="disabled" type="text" class="form-control">
+							<input disabled="disabled" type="text" class="form-control input">
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="submit">Send</button>
+								<button class="btn btn-primary" type="submit">Send</button>
 							</span>
 						</div><!-- /input-group -->
 					</form>
@@ -53,13 +53,12 @@
 			</div><!-- /.row -->
 		</div>
 		<div class="info">
-			<h1>Info</h1>
+			<h2>Info</h2>
 			<div class="well">
 				<h4>Project</h4>
 				<p>
-					This is a simple webapp which works completely offline. The notes get stored in the browser's
-					"local storage".<br/>
-					<a href="https://github.com/mwitte/Notes-Webapp">Github Project</a>
+					This is a single page application with a nodejs backend. The data is provided by WebSocket.<br/>
+					<a href="https://github.com/mwitte/WebSocket-nodejs-Chat">Github Project</a>
 				</p>
 				<h4>Author</h4>
 				<p>
