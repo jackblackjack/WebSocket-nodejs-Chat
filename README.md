@@ -12,6 +12,11 @@ There is a Gruntfile.js for building the webapp with grunt so you need [grunt](h
 	npm install
 	grunt
 
+Browser support
+---------------
+This application uses WebSockets. This works for nearly every current Browser:
+[caniuse.com/websockets](http://caniuse.com/websockets)
+
 Thanks to
 ---------
 
