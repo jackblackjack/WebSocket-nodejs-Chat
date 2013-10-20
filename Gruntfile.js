@@ -1,7 +1,9 @@
 
-var sourceDir = "src/";
+var sourceDir = "src/"
+var sourceDirWebApp = "src/webapp/"
+var sourceDirServerApp = "src/server/";
 var buildDirWebApp = "build/webapp/";
-var buildDirServerApp = "build/";
+var buildDirServerApp = "build/server/";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -11,19 +13,20 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: [
-					sourceDir + 'app/lib/jquery.js',
-					sourceDir + 'app/lib/bootstrap.min.js',
-					sourceDir + 'app/js/**/*.js'
+					sourceDirWebApp + 'app/lib/jquery.js',
+					sourceDirWebApp + 'app/lib/bootstrap.min.js',
+					sourceDirWebApp + 'app/js/Config.js',
+					sourceDirWebApp + 'app/js/**/*.js'
 				],
 				dest: buildDirWebApp + 'app/js/app.js'
 			},
 			server: {
 				src: [
-					sourceDir + 'server/WebSocketServer.js',
-					sourceDir + 'server/SimpleChatServer.js',
-					sourceDir + 'server/**/*.js'
+					sourceDirServerApp + 'WebSocketServer.js',
+					sourceDirServerApp + 'SimpleChatServer.js',
+					sourceDirServerApp + '**/*.js'
 				],
-				dest: buildDirServerApp + 'server/app.js'
+				dest: buildDirServerApp + 'app.js'
 			}
 		},
 		sass: {
@@ -32,7 +35,7 @@ module.exports = function(grunt) {
 					style: 'compressed' // compressed, expanded
 				},
 				files: [{
-					src: [sourceDir + 'app/sass/main.scss'],
+					src: [sourceDirWebApp + 'app/sass/main.scss'],
 					dest: buildDirWebApp + 'app/css/styles.css'
 				}]
 			}
@@ -40,15 +43,15 @@ module.exports = function(grunt) {
 		copy: {
 			main: {
 				files: [
-					{expand: true, cwd: sourceDir + 'app/', src: ['font/**'], dest: buildDirWebApp + 'app'},
-					{expand: true, cwd: sourceDir + 'app/', src: ['img/**'], dest: buildDirWebApp + 'app'},
-					{expand: true, cwd: sourceDir, src: ['*'], dest: buildDirWebApp, filter: 'isFile'}
+					{expand: true, cwd: sourceDirWebApp + 'app/', src: ['font/**'], dest: buildDirWebApp + 'app'},
+					{expand: true, cwd: sourceDirWebApp + 'app/', src: ['img/**'], dest: buildDirWebApp + 'app'},
+					{expand: true, cwd: sourceDirWebApp, src: ['*'], dest: buildDirWebApp, filter: 'isFile'}
 				]
 			}
 		},
 		watch: {
 			scripts: {
-				files: [ sourceDir + '**/*'], // all files in src dir
+				files: [ sourceDirWebApp + '**/*'], // all files in src dir
 				tasks: ['build'],
 				options: {
 					livereload: true,
@@ -60,6 +63,17 @@ module.exports = function(grunt) {
 			server: {
 				path: 'http://test.local/'
 			}
+		},
+		nodemon: {
+			dev: {
+				options: {
+					file: buildDirServerApp + 'app.js',
+					watchedExtensions: ['js'],
+					watchedFolders: [sourceDirServerApp],
+					delayTime: 1,
+					legacyWatch: true
+				}
+			}
 		}
 	});
 
@@ -68,7 +82,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-nodemon');
 	grunt.loadNpmTasks('grunt-open');
+
+	grunt.registerTask('watchserver', [
+		'build',
+		'nodemon'
+	]);
 
 	grunt.registerTask('build', [
 		'concat',

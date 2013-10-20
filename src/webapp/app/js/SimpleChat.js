@@ -2,7 +2,7 @@ var SimpleChat = {
 	content: $('#chat .content'),
 	input: $('#chat .input'),
 	inputLabel: $('#chat .chatLabel'),
-	nickname: false,
+	clientSettings: {},
 	lineEven: false,
 
 	printChatLine: function(content, animated, classes){
@@ -15,7 +15,7 @@ var SimpleChat = {
 		}
 		SimpleChat.content.prepend('<p style="display: none;" class="'+classes + evenClass+'">'+ content + '</p>');
 		if(animated){
-			SimpleChat.content.children().first().slideDown('slow');
+			SimpleChat.content.children().first().slideDown('fast');
 		}else{
 			SimpleChat.content.children().first().show();;
 		}
@@ -64,9 +64,6 @@ var SimpleChat = {
 			$(this).find('input').val('');
 			SimpleChat.input.attr('disabled', 'disabled');
 
-			if (SimpleChat.nickname === false) {
-				SimpleChat.nickname = message;
-			}
 			return false;
 		});
 	},
@@ -75,8 +72,13 @@ var SimpleChat = {
 		provider: null,
 		established: function(){
 			console.log('connection established');
+			var storedClientSettings = Storage.restore('clientSettings');
+			if(storedClientSettings && typeof storedClientSettings.nickname !== "undefined"){
+				SimpleChat.Socket.send(storedClientSettings.nickname);
+			}else{
+				SimpleChat.inputLabel.text('Choose your nick:');
+			}
 			SimpleChat.input.removeAttr('disabled');
-			SimpleChat.inputLabel.text('Choose your nick:');
 		},
 		error: function(error){
 			SimpleChat.content.html($('<p>', { text: 'Sorry but there are connection problems' } ));
@@ -84,30 +86,32 @@ var SimpleChat = {
 		message: function(message){
 			// probably the message is damaged
 			try {
-				var json = JSON.parse(message.data);
+				message = JSON.parse(message.data);
 			} catch (e) {
 				console.log('Message should be JSON! Given: ', message.data);
 				return;
 			}
-			switch (json.type){
+			switch (message.type){
 				case 'settings':
-					SimpleChat.inputLabel.text(SimpleChat.nickname + ': ');
+					SimpleChat.clientSettings = message.body;
+					Storage.store('clientSettings', SimpleChat.clientSettings);
+					SimpleChat.inputLabel.text(SimpleChat.clientSettings.nickname);
 					SimpleChat.input.removeAttr('disabled').focus();
 					break;
 				case 'chronicle':
-					$.each(json.body, function( key, message ) {
+					$.each(message.body, function( key, message ) {
 						SimpleChat.showMessage(message, false);
 					});
 					break;
 				case 'message':
 					SimpleChat.input.removeAttr('disabled').focus();
-					SimpleChat.showMessage(json.body, true);
+					SimpleChat.showMessage(message.body, true);
 					break;
 				case 'info':
-					SimpleChat.showInfo(json.body, true);
+					SimpleChat.showInfo(message.body, true);
 					break;
 				default:
-					console.log('Unknown message type: ', json);
+					console.log('Unknown message type: ', message);
 			}
 		},
 		send: function(message){

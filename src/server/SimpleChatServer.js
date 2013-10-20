@@ -9,12 +9,11 @@ var SimpleChatServer = {
 	 * @param client
 	 */
 	message: function(message, client){
-
-		// if nickname isn't set its the first message
+		// if nickname isn't set the message is the clients nickname
 		if (typeof client.settings.nickname === 'undefined') {
 			// add nickname to client settings
 			client.settings.nickname = SimpleChatServer.uniqueNickname(U.htmlEntities(message.utf8Data));
-			WebSocketServer.send(client, { type:'settings', body: {}});
+			WebSocketServer.send(client, { type:'settings', body: client.settings});
 			var infoObject = {
 				created: (new Date()).getTime(),
 				type: 'userJoined',
