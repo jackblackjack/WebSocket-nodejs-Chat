@@ -19,6 +19,7 @@ function SimpleSocket(host, port, onOpenCallback, onErrorCallback, onMessageCall
 		onOpenCallback();
 	};
 	socket.onerror = function (error) {
+		socket.close();
 		onErrorCallback(error);
 	};
 	socket.onmessage = function (message) {

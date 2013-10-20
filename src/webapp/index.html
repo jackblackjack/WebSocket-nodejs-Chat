@@ -26,7 +26,7 @@
 		  media="(-webkit-device-pixel-ratio: 2) and (device-width: 320px) and (device-height: 568px)"
 		  href="app/img/startup-640x1096.png" sizes="640x1096">
 
-	<title>Notes</title>
+	<title>HipsterChat</title>
 	<!-- styles -->
 	<link href="app/css/styles.css" rel="stylesheet">
 </head>
@@ -34,7 +34,18 @@
 <body style="">
 
 <div class="container">
-	<a href="#" data-content="chat" class="navigation"><h1>HipsterChat</h1></a>
+	<div class="row">
+		<div class="col-xs-8">
+			<a href="#" data-content="chat" class="navigation">
+				<h1>HipsterChat</h1>
+			</a>
+		</div>
+		<div class="col-xs-4 info">
+			<span class="pull-right"><a href="#" data-content="info" class="navigation btn btn-default">Info</a></span>
+		</div>
+
+
+	</div>
 	<div class="content">
 		<div class="chat" id="chat">
 			<div id="content" class="content"></div>
@@ -81,9 +92,6 @@
 	<!-- /.content -->
 </div>
 <!-- /.container -->
-<div class="footer">
-	<a href="#" data-content="info" class="navigation btn btn-default">Info</a>
-</div>
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="app/js/app.js"></script>
 <script src="//localhost:35729/livereload.js"></script>

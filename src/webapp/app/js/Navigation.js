@@ -4,7 +4,7 @@
  */
 var Navigation = {
 	bindEvents: function(){
-		$('.container .content').children().hide().first().fadeIn(600);
+		$('body > div.container > div.content').children().hide().first().fadeIn(600);
 		$('.footer').hide().fadeIn(600);
 		$('.navigation').click(function(){
 			Navigation.showContent($(this));
@@ -13,8 +13,8 @@ var Navigation = {
 	},
 	showContent: function(clickedElement, callback){
 		$('.footer').fadeOut(200);
-		$('.container .content').children().fadeOut(300);
-		$('.container .content div.' + $(clickedElement).attr('data-content')).delay(300).fadeIn(300);
+		$('body > div.container > div.content').children().fadeOut(300);
+		$('body > div.container > div.content div.' + $(clickedElement).attr('data-content')).delay(300).fadeIn(300);
 		$('.footer').delay(300).fadeIn(300);
 		if(callback){
 			setTimeout(function() {

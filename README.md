@@ -16,6 +16,7 @@ Thanks to
 ---------
 
 - Twitter for Bootstrap
+- Designmodo for the Chatlogo which I used as icon
 
 Licence
 -------

@@ -75,6 +75,7 @@ var SimpleChat = {
 			var storedClientSettings = Storage.restore('clientSettings');
 			if(storedClientSettings && typeof storedClientSettings.nickname !== "undefined"){
 				SimpleChat.Socket.send(storedClientSettings.nickname);
+				SimpleChat.input.val('');
 			}else{
 				SimpleChat.inputLabel.text('Choose your nick:');
 			}
@@ -126,6 +127,7 @@ var SimpleChat = {
 				SimpleChat.inputLabel.text('Error');
 				SimpleChat.input.attr('disabled', 'disabled').val('Server is unavailable');
 				// @TODO think about reconnection
+				SimpleChat.Socket.provider = new SimpleSocket(ChatServer.host, ChatServer.port, SimpleChat.Socket.established, SimpleChat.Socket.error, SimpleChat.Socket.message);
 			}
 		}, ChatServer.timeout);
 		// create a new socket and assign the Chat's methods as callback methods
