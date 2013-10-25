@@ -2,24 +2,39 @@
 
 process.title = 'node-simplechat';
 
+/**
+ * For logging
+ */
 var winston = require('winston');
 var logger = new (winston.Logger)({
 	transports: [
 		new (winston.transports.Console)(),
-		new (winston.transports.File)({ filename: '/tmp/nodejs.log' })
+		new (winston.transports.File)({ filename: __dirname + '/'+ ChatServer.logfile })
 	]
 });
 
-var webSocketsServerPort = 61457;
+/**
+ * Static http server serves the files(e. g. index.html)
+ */
+var express = require('express');
+var app = express();
+app.configure(function(){
+    app.use(express.static(__dirname + '/webapp'));
+});
+app.listen(ChatServer.httpPort);
+
+
+/**
+ * Http server is only needed for webSocket handshake
+ */
 var http = require('http');
-
-// http server
-var httpServer = http.createServer(function(request, response) {
-	// useless so far, we need it only for the webSocket
-});
-httpServer.listen(webSocketsServerPort, function() {
-	logger.log('info', "Server is listening on port " + webSocketsServerPort);
+var httpServer = http.createServer(function(request, response) { });
+httpServer.listen(ChatServer.socketPort, function() {
+	logger.log('info', "Server is listening on port " + ChatServer.socketPort);
 });
 
+/**
+ * Initialize the WebSocketServer
+ */
 WebSocketServer.init(httpServer, SimpleChatServer.request, SimpleChatServer.message, SimpleChatServer.close);
 

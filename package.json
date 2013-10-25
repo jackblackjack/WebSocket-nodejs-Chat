@@ -1,10 +1,13 @@
 {
-  "name": "notes-app",
+  "name": "simpechat-app",
   "version": "0.0.1",
   "dependencies": {
-    "grunt-open": "~0.2.2"
+    "express": "3.x",
+    "winston": "0.7.x",
+    "websocket": "1.0.x"
   },
   "devDependencies": {
+    "grunt-open": "~0.2.2",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-sass": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",

@@ -1,9 +1,10 @@
 
 var sourceDir = "src/"
-var sourceDirWebApp = "src/webapp/"
-var sourceDirServerApp = "src/server/";
+var configDir = sourceDir +"config/"
+var sourceDirWebApp = sourceDir +"webapp/"
+var sourceDirServerApp = sourceDir +"server/";
 var buildDirWebApp = "build/webapp/";
-var buildDirServerApp = "build/server/";
+var buildDirServerApp = "build/";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -11,8 +12,9 @@ module.exports = function(grunt) {
 			options: {
 				separator: ';'
 			},
-			dist: {
+			webapp: {
 				src: [
+                    configDir + '**/*.js',
 					sourceDirWebApp + 'app/lib/jquery.js',
 					sourceDirWebApp + 'app/lib/bootstrap.min.js',
 					sourceDirWebApp + 'app/js/Config.js',
@@ -22,6 +24,7 @@ module.exports = function(grunt) {
 			},
 			server: {
 				src: [
+                    configDir + '**/*.js',
 					sourceDirServerApp + 'WebSocketServer.js',
 					sourceDirServerApp + 'SimpleChatServer.js',
 					sourceDirServerApp + '**/*.js'
@@ -62,7 +65,7 @@ module.exports = function(grunt) {
 		},
 		open: {
 			server: {
-				path: 'http://test.local/'
+				path: 'http://localhost:3000/'
 			}
 		},
 		nodemon: {
@@ -86,7 +89,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-nodemon');
 	grunt.loadNpmTasks('grunt-open');
 
-	grunt.registerTask('watchserver', [
+	grunt.registerTask('server', [
 		'build',
 		'nodemon'
 	]);
@@ -99,6 +102,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', [
 		'build',
-		'open'
+        'open'
 	]);
 };
