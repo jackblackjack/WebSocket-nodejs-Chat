@@ -19,7 +19,17 @@ var logger = new (winston.Logger)({
 var express = require('express');
 var app = express();
 app.configure(function(){
+    // test express server functionality
+    app.use(function(req, res, next) {
+        res.setHeader("Server", "Matze/0.0.1a");
+        if (!res.getHeader('Cache-Control') || !res.getHeader('Expires')) {
+            res.setHeader("Cache-Control", "public, max-age=345600"); // ex. 4 days in seconds.
+            res.setHeader("Expires", new Date(Date.now() + 345600000).toUTCString());  // in ms.
+        }
+        return next();
+    });
     app.use(express.static(__dirname + '/webapp'));
+
 });
 app.listen(ChatServer.httpPort);
 

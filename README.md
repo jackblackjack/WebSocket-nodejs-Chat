@@ -1,7 +1,7 @@
 WebSocket nodejs Chat
 =====================
-This is a single page application with a nodejs backend. The data is provided by WebSocket. There will be a online demo
-soon.
+This is a single page application with a nodejs backend. The data is provided by WebSocket. The files are provided
+by express(a middleware for the nodejs http server). There is a [online demo](http://wittem.puppis.uberspace.de/chat/).
 
 
 Build
