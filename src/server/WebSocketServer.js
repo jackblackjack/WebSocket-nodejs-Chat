@@ -23,7 +23,7 @@ var WebSocketServer = {
 		 * on Request
 		 */
 		wsServer.on('request', function(request) {
-			console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
+			logger.log('info', 'Connection from origin ' + request.origin);
 			// @TODO check connection is from same origin request.origin
 			var connection = request.accept(null, request.origin);
 			var client = {
@@ -34,7 +34,7 @@ var WebSocketServer = {
 			var clientIndex = Object.keys(WebSocketServer.clients).length;
 			WebSocketServer.clients[clientIndex] = client;
 
-			console.log((new Date()) + ' Connection accepted with index ' + clientIndex);
+			logger.log('info', 'Connection accepted with index ' + clientIndex);
 			if(onRequest){
 				onRequest(client);
 			}
@@ -54,7 +54,7 @@ var WebSocketServer = {
 			 * Client disconnected
 			 */
 			client.connection.on('close', function(connection) {
-				console.log((new Date()) + " Client " + client.connection.remoteAddress + " disconnected.");
+				logger.log('info', "Client " + client.connection.remoteAddress + " disconnected.");
 				// remove user from the list of connected clients
 				delete WebSocketServer.clients[clientIndex];
 				if(onClose){

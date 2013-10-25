@@ -1,4 +1,5 @@
 var SimpleChat = {
+	audio: document.getElementById('audio'),
 	content: $('#chat .content'),
 	input: $('#chat .input'),
 	inputLabel: $('#chat .chatLabel'),
@@ -13,11 +14,16 @@ var SimpleChat = {
 			SimpleChat.lineEven = true;
 			var evenClass = "";
 		}
-		SimpleChat.content.prepend('<p style="display: none;" class="'+classes + evenClass+'">'+ content + '</p>');
+		SimpleChat.content.append('<p style="display: none;" class="'+classes + evenClass+'">'+ content + '</p>');
 		if(animated){
-			SimpleChat.content.children().first().slideDown('fast');
+			SimpleChat.content.children().last().fadeIn('slow');
+			// scroll to the bottom of the container
+			SimpleChat.content.animate({
+				scrollTop: SimpleChat.content[0].scrollHeight
+			}, 250);
 		}else{
-			SimpleChat.content.children().first().show();;
+			SimpleChat.content.children().last().show();
+			SimpleChat.content.scrollTop(SimpleChat.content[0].scrollHeight);
 		}
 	},
 
@@ -32,6 +38,9 @@ var SimpleChat = {
 
 		var content = timeStamp + ' ' + message.author +': ' + message.content;
 		SimpleChat.printChatLine(content, animated, '');
+		if(animated){
+			SimpleChat.audio.play();
+		}
 	},
 
 	showInfo: function(info, animated){
@@ -100,6 +109,7 @@ var SimpleChat = {
 					SimpleChat.input.removeAttr('disabled').focus();
 					break;
 				case 'chronicle':
+					console.log(message.body.length);
 					$.each(message.body, function( key, message ) {
 						SimpleChat.showMessage(message, false);
 					});
@@ -127,10 +137,10 @@ var SimpleChat = {
 				SimpleChat.inputLabel.text('Error');
 				SimpleChat.input.attr('disabled', 'disabled').val('Server is unavailable');
 				// @TODO think about reconnection
-				SimpleChat.Socket.provider = new SimpleSocket(ChatServer.host, ChatServer.port, SimpleChat.Socket.established, SimpleChat.Socket.error, SimpleChat.Socket.message);
+				SimpleChat.Socket.provider = new SimpleSocket(ChatServer.host, ChatServer.port, ChatServer.path, SimpleChat.Socket.established, SimpleChat.Socket.error, SimpleChat.Socket.message);
 			}
 		}, ChatServer.timeout);
 		// create a new socket and assign the Chat's methods as callback methods
-		SimpleChat.Socket.provider = new SimpleSocket(ChatServer.host, ChatServer.port, SimpleChat.Socket.established, SimpleChat.Socket.error, SimpleChat.Socket.message);
+		SimpleChat.Socket.provider = new SimpleSocket(ChatServer.host, ChatServer.port, ChatServer.path, SimpleChat.Socket.established, SimpleChat.Socket.error, SimpleChat.Socket.message);
 	}
 }

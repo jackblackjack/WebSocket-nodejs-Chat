@@ -7,14 +7,14 @@
  * @param onErrorCallback is called when the socket got an error
  * @param onMessageCallback is called when there comes a new message
  */
-function SimpleSocket(host, port, onOpenCallback, onErrorCallback, onMessageCallback){
+function SimpleSocket(host, port, path, onOpenCallback, onErrorCallback, onMessageCallback){
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
 	// if browser does not support WebSockets
 	if (!window.WebSocket) {
 		alert("Browser does not support WebSockets")
 		return;
 	}
-	var socket = new WebSocket('ws://' + host + ':' + port);
+	var socket = new WebSocket('ws://' + host + ':' + port + path);
 	socket.onopen = function () {
 		onOpenCallback();
 	};

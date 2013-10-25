@@ -20,9 +20,9 @@ var SimpleChatServer = {
 				content: client.settings.nickname
 			};
 			WebSocketServer.broadcast({type: 'info', body: infoObject});
-			console.log((new Date()) + ' User is known as: ' + client.settings.nickname);
+			logger.log('info', 'User is known as: ' + client.settings.nickname);
 		} else {
-			console.log((new Date()) + ' Received Message from '
+			logger.log('info', 'Received Message from '
 				+ client.settings.nickname + ': ' + message.utf8Data);
 			// we want to keep chronicle of all sent messages
 			var messageObject = {
@@ -72,17 +72,16 @@ var SimpleChatServer = {
 	 * @param increment optional
 	 * @returns string
 	 */
-	uniqueNickname: function(nickname, increment) {
+	uniqueNickname: function(nickname) {
 		if (typeof increment === 'undefined') {
-			increment = 0;
+			var increment = 0;
 		}
 		var newNick = nickname;
 		Object.keys(WebSocketServer.clients).forEach(function(index) {
 			var otherNickname = WebSocketServer.clients[index].settings.nickname;
 			if(typeof otherNickname !== 'undefined' && nickname === otherNickname){
-				console.log('ja');
-				increment++;
-				newNick =  SimpleChatServer.uniqueNickname(nickname +''+ increment, increment);
+				newNick = nickname + '' + Math.floor(Math.random()*10);
+				return;
 			}
 		});
 		return newNick;
